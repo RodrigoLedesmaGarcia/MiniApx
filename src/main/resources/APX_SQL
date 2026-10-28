@@ -1,0 +1,9 @@
+INSERT INTO tarjetas
+(titular, numero_tarjeta, estado)
+VALUES
+('Ana', 'TEST-001', 'ACTIVA'),
+('Luis', 'TEST-002', 'ACTIVA'),
+('Maria', 'TEST-003', 'ACTIVA'),
+('Pedro', 'TEST-004', 'ACTIVA'),
+('Sofia', 'TEST-005', 'ACTIVA'),
+('Lucia', 'TEST-006', 'INACTIVA');
