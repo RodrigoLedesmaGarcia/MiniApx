@@ -16,17 +16,10 @@ public class TarjetasLibraryImpl implements TarjetasLibrary {
         this.tarjetaService = tarjetaService;
     }
 
+
     @Override
     public TarjetasResponseDTO executeGetBusinessCards(
-            String estado,
-            int pagina,
-            int tamanio) {
-
-        TarjetasRequestDTO request = new TarjetasRequestDTO();
-
-        request.setEstado(estado);
-        request.setPagina(pagina);
-        request.setTamanio(tamanio);
+            TarjetasRequestDTO request) {
 
         return tarjetaService.obtenerTarjetas(request);
     }

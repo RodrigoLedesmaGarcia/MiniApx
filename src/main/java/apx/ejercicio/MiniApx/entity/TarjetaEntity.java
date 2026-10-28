@@ -1,6 +1,9 @@
 package apx.ejercicio.MiniApx.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tarjetas")
@@ -10,16 +13,30 @@ public class TarjetaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "El titular es obligatorio")
     private String titular;
 
-    @Column(name = "numero_tarjeta", nullable = false)
+    @NotBlank(message = "El número de tarjeta es obligatorio")
+    @Size(max = 30, message = "Máximo 30 caracteres")
     private String numeroTarjeta;
 
-    @Column(nullable = false)
+    @NotBlank(message = "El estado es obligatorio")
+    @Pattern(
+            regexp = "ACTIVA|INACTIVA",
+            message = "El estado debe ser ACTIVA o INACTIVA"
+    )
     private String estado;
 
     public TarjetaEntity() {
+    }
+
+    public TarjetaEntity(String titular){
+        super();
+    }
+
+    public TarjetaEntity(String titular, String numeroTarjeta) {
+        this.titular = titular;
+        this.numeroTarjeta = numeroTarjeta;
     }
 
     public TarjetaEntity(String titular, String numeroTarjeta, String estado) {

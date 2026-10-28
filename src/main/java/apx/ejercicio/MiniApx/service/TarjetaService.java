@@ -94,44 +94,6 @@ public class TarjetaService {
                 .map(TarjetaMapper::toDTO);
     }
 
-    /*
-    @Transactional(readOnly = true)
-    public TarjetasResponseDTO obtenerTarjetas(
-            String estado,
-            int pagina,
-            int tamanio) {
-
-        // 1. Validar los parámetros
-        if (pagina < 1) {
-            throw new IllegalArgumentException(
-                    "La página debe ser mayor o igual a 1");
-        }
-
-        if (tamanio < 1 || tamanio > 25) {
-            throw new IllegalArgumentException(
-                    "El tamaño debe estar entre 1 y 25");
-        }
-
-        // 2. Consultar las tarjetas
-        Page<TarjetaDTO> resultado =
-                buscarPorEstado(estado, pagina - 1, tamanio);
-
-        // 3. Crear los metadatos de paginación
-        PaginationDTO pagination = new PaginationDTO(
-                resultado.getNumber() + 1,
-                resultado.getSize(),
-                resultado.getTotalPages(),
-                resultado.getTotalElements()
-        );
-
-        // 4. Construir la respuesta
-        return new TarjetasResponseDTO(
-                resultado.getContent(),
-                pagination
-        );
-    }
-
-     */
 
     @Transactional(readOnly = true)
     public TarjetasResponseDTO obtenerTarjetas(
@@ -213,51 +175,14 @@ public class TarjetaService {
     public TarjetaCreadaDTO crearTarjeta(
             CrearTarjetaRequestDTO request) {
 
-        // 1. Validar entrada
-        if (request == null ||
-                request.titular() == null ||
-                request.titular().isBlank()) {
-
-            throw new IllegalArgumentException(
-                    "El titular es obligatorio");
-        }
-
-        if (request.numeroTarjeta() == null ||
-                request.numeroTarjeta().isBlank()) {
-
-            throw new IllegalArgumentException(
-                    "El identificador de tarjeta es obligatorio");
-        }
-
-        if (request.estado() == null) {
-            throw new IllegalArgumentException(
-                    "El estado es obligatorio");
-        }
-
-        String estado = request.estado()
-                .trim()
-                .toUpperCase(Locale.ROOT);
-
-        if (!estado.equals("ACTIVA") &&
-                !estado.equals("INACTIVA")) {
-
-            throw new IllegalArgumentException(
-                    "Estado no válido");
-        }
-
-        // 2. Crear entidad
         TarjetaEntity tarjeta = new TarjetaEntity();
 
         tarjeta.setTitular(request.titular().trim());
-        tarjeta.setNumeroTarjeta(
-                request.numeroTarjeta().trim());
-        tarjeta.setEstado(estado);
+        tarjeta.setNumeroTarjeta(request.numeroTarjeta().trim());
+        tarjeta.setEstado(request.estado());
 
-        // 3. Guardar en MySQL
-        TarjetaEntity guardada =
-                repository.save(tarjeta);
+        TarjetaEntity guardada = repository.save(tarjeta);
 
-        // 4. Convertir a DTO de respuesta
         return new TarjetaCreadaDTO(
                 guardada.getId(),
                 guardada.getTitular(),
@@ -265,6 +190,8 @@ public class TarjetaService {
         );
     }
 
+
+    // método para normalizar un string
     private String normalizar(String valor) {
         if (valor == null || valor.isBlank()) {
             return null;
